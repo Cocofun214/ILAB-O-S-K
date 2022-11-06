@@ -1,5 +1,7 @@
 No [1]
 
+==== prompt.asm ====
+
 ; directive include
 %include "asm_io.inc"
 
@@ -42,6 +44,8 @@ segment .text
       ret
       
 No [2]
+
+==== prompt2.asm ====
 
    ; directive include
 %include "asm_io.inc"
