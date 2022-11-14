@@ -112,3 +112,160 @@ Lompat ke suatu llabel kode
 
 * Instruksi operand
 * instruksi lompat kondisional
+
+
+
+
+==================== ACT 5 ====================
+
+---- 5.1 ------
+
+   ; directive include
+%include "asm_io.inc"
+
+segment .data
+   ; directive Dx
+   inp1 db "Masukkan Nilai 1 (0 s.d 100): ", 0
+   inp2 db "Masukkan Nilai 2 (0 s.d 100): ", 0
+   lulus db "Anda lulus!", 0
+   galulus db "Anda tidak lulus!", 0
+   invalid db "Angka yang Anda masukkan tidak dalam 0 s.d 100", 0
+	
+segment .bss
+   ; directive Dx
+   a1 RESb 32
+   a2 RESb 32
+
+segment .text
+   global _main
+   _main:
+      ; Routine “setup”
+      enter  0, 0
+      pusha
+
+      ; Program Anda di bawah
+      mov   eax, inp1      ; Input pertama
+      call  print_string
+      call  read_int
+      
+      cmp   eax, 0         ; compare inpu1
+      jl    Invalid
+
+      cmp   eax, 100
+      jg    Invalid
+
+      mov   [a1], eax
+      jmp   endif
+
+   endif:
+      mov   eax, inp2      ; Input kedua
+      call  print_string
+      call  read_int
+      
+      cmp   eax, 0         ; compare input2
+      jl    Invalid
+
+      cmp   eax, 100
+      jg    Invalid
+
+      mov   [a2], eax
+      jmp   endif2
+
+   endif2:
+      mov   eax, [a1]      
+      add   eax, [a2]
+
+      cmp   eax, 150       ; compare lulus / galulus
+      jl    GaLulus
+      jge   Lulus
+      jmp   close
+
+   Lulus:
+      mov   eax, lulus
+      call  print_string
+      jmp   close
+
+   GaLulus:
+      mov   eax, galulus
+      call  print_string
+      jmp   close
+
+   Invalid:
+      mov   eax, invalid
+      call  print_string
+      jmp   close
+   
+   close:
+      ; Routine “cleanup”
+      popa
+      mov    eax, 0
+      leave
+      ret
+      
+      
+      
+      
+ ------------- 5.2 ----------
+ 
+ 
+    ; directive include
+%include "asm_io.inc"
+
+segment .data
+   ; directive Dx
+   inp db "Masukkan angka (0 s.d 10): ", 0
+   error db "Angka yang Anda masukkan tidak diantara 0 s.d 10", 0
+	
+segment .bss
+   ; directive RESx
+
+segment .text
+   global _main
+   _main:
+      ; Routine “setup”
+      enter  0, 0
+      pusha
+
+      ; Program Anda di bawah
+      mov   eax, inp       ; Input
+      call  print_string
+      call  read_int
+         
+      cmp   eax, 0         ; compare input
+      jl    Invalid
+
+      cmp   eax, 10
+      jg    Invalid
+
+      mov   ebx, eax
+
+      cmp ebx, 0
+      je satu
+
+   while:
+      dec ebx
+      cmp ebx, 0
+      jle end
+      imul eax, ebx
+      jmp while
+
+   end:
+      call print_int
+      jmp close
+
+   satu:
+      mov eax, 1
+      call print_int
+      jmp close
+
+   Invalid:
+      mov eax, error
+      call print_string
+      jmp close
+
+   close:
+      ; Routine “cleanup”
+      popa
+      mov    eax, 0
+      leave
+      ret
